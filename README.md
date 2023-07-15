@@ -34,7 +34,7 @@
 
 ## ERD
 
-**TBD**
+![ERD](doc/assets/Screenshot%202023-07-15%20at%205.19.51%20PM.png)
 
 ## Trouble Shooting
 
