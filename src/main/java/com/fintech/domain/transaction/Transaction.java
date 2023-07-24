@@ -1,7 +1,7 @@
 package com.fintech.domain.transaction;
 
 import com.fintech.domain.account.Account;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
