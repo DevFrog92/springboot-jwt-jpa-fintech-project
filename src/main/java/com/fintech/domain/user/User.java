@@ -34,7 +34,6 @@ public class User {
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     @Builder
