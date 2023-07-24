@@ -8,12 +8,10 @@ public class UserResponseDto {
     @Getter
     @Setter
     public static class UserJoinResponseDto {
-        private Long id;
         private String username;
         private String email;
 
         public UserJoinResponseDto(User user) {
-            this.id = user.getId();
             this.username = user.getUsername();
             this.email = user.getEmail();
         }
