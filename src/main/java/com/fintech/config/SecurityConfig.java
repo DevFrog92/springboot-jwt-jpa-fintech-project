@@ -23,7 +23,8 @@ public class SecurityConfig {
                 .antMatchers("/**")
                 .permitAll()
                 .and()
-                .csrf().disable();
+                .csrf().disable()
+                .headers().frameOptions().disable();
         return http.build();
     }
 }
