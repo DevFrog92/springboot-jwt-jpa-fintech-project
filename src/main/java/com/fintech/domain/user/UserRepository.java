@@ -1,9 +1,10 @@
 package com.fintech.domain.user;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+public interface UserRepository {
+    User join(User user);
 
-import java.util.Optional;
+    User findByEmail(String email);
 
-public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByUsername(String username);
+    void update(String email, String password);
+
 }
