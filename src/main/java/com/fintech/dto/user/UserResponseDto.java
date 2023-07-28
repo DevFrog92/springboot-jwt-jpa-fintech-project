@@ -11,7 +11,7 @@ public class UserResponseDto {
         private String username;
         private String email;
 
-        public UserJoinResponseDto(User user) {
+        public UserJoinResponseDto(UserDto user) {
             this.username = user.getUsername();
             this.email = user.getEmail();
         }
