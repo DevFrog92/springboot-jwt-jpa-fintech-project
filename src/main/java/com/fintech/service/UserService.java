@@ -2,6 +2,7 @@ package com.fintech.service;
 
 import com.fintech.domain.user.User;
 import com.fintech.domain.user.UserRepository;
+import com.fintech.dto.user.UserDto;
 import com.fintech.dto.user.UserRequestDto.UserJoinRequestDto;
 import com.fintech.exception.CustomUserApiException;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +20,15 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Transactional
-    public User join(UserJoinRequestDto joinDto) {
+    public UserDto join(UserJoinRequestDto joinDto) {
         User findUser = findByEmail(joinDto.getEmail());
 
         if (findUser != null) {
             throw new CustomUserApiException("중복된 사용자가 있습니다.");
         }
 
-        return userRepository.join(joinDto.toEntity(passwordEncoder));
+        User joinUser = userRepository.join(joinDto.toEntity(passwordEncoder));
+        return UserDto.fromEntity(joinUser);
     }
 
     public User findByEmail(String email) {
