@@ -21,12 +21,12 @@ public class UserRequestDto {
         private String email;
 
         @NotEmpty
-        @Pattern(regexp = "^(?=.*\\d)(?=.[a-zA-Z])[a-zA-Z0-9]{4,20}$",
-                message = "영문과 숫자 포함 4~20자 이내로 작성해주세요.")
+        @Size(min = 4, max = 20, message = "4~20자 이내로 작성해주세요.")
         private String username;
 
         @NotEmpty
-        @Size(min = 4, max = 20, message = "4~20자 이내로 작성해주세요.")
+        @Pattern(regexp = "^(?=.*\\d)(?=.[a-zA-Z])[a-zA-Z0-9]{4,20}$",
+                message = "영문과 숫자 포함 4~20자 이내로 작성해주세요.")
         private String password;
 
         public User toEntity(BCryptPasswordEncoder passwordEncoder) {

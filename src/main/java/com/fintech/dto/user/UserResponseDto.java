@@ -1,6 +1,5 @@
 package com.fintech.dto.user;
 
-import com.fintech.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
 
