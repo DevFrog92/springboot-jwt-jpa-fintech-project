@@ -1,7 +1,7 @@
 package com.fintech.web.controller;
 
-import com.fintech.domain.user.User;
 import com.fintech.dto.ResponseDto;
+import com.fintech.dto.user.UserDto;
 import com.fintech.dto.user.UserRequestDto.UserJoinRequestDto;
 import com.fintech.dto.user.UserResponseDto.UserJoinResponseDto;
 import com.fintech.service.UserService;
@@ -29,7 +29,7 @@ public class UserApiController {
             BindingResult bindingResult
     ) {
 
-        User joinUser = userService.join(joinDto);
+        UserDto joinUser = userService.join(joinDto);
 
         return new ResponseEntity<>(
                 new ResponseDto(
