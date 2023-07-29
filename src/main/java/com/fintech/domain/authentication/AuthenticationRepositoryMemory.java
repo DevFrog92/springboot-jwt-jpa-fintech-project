@@ -17,7 +17,6 @@ public class AuthenticationRepositoryMemory implements AuthenticationRepository 
     @Override
     public void save(AuthenticationObj authObj) {
         store.put(authObj.email, authObj);
-        log.info(store.toString());
     }
 
     @Override
@@ -25,7 +24,6 @@ public class AuthenticationRepositoryMemory implements AuthenticationRepository 
         if(store.get(identity) == null) {
             return false;
         }
-        log.info("사용자 인증 상태 검증={}", store.get(identity).getState().equals(COMPLETE));
 
         return store.get(identity)
                 .getState()
