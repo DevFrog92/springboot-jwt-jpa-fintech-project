@@ -21,6 +21,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  config:
+    import: smtp.properties
 
 logging:
   level:
