@@ -2,6 +2,8 @@ package com.fintech.service.authentication;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -12,9 +14,15 @@ import javax.mail.internet.MimeMessage;
 
 @Slf4j
 @Service
+@PropertySource("classpath:smtp.properties")
 public class MailAuthentication implements AuthenticationMethod {
     @Autowired
     JavaMailSender javaMailSender;
+
+    @Value("${AdminMail.id}")
+    private String emailAddress;
+    @Value("${AdminMail.personal}")
+    private String emailPersonal;
 
     private MimeMessage createMessage(String to, String authCode) {
         MimeMessage message = javaMailSender.createMimeMessage();
@@ -40,7 +48,7 @@ public class MailAuthentication implements AuthenticationMethod {
             msg += authCode + "</strong><div><br/> ";
             msg += "</div>";
             message.setText(msg, "utf-8", "html");
-            message.setFrom(new InternetAddress("yskwon0619@gmail.com", "DevFrog"));
+            message.setFrom(new InternetAddress(emailAddress, emailPersonal));
         } catch (Exception e) {
             // todo custom exception
         }
