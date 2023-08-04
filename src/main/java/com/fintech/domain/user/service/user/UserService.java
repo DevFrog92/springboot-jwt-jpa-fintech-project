@@ -1,13 +1,14 @@
-package com.fintech.service.user;
+package com.fintech.domain.user.service.user;
 
-import com.fintech.domain.authentication.AuthenticationObj;
-import com.fintech.domain.authentication.AuthenticationRepository;
-import com.fintech.domain.user.User;
-import com.fintech.domain.user.UserRepository;
-import com.fintech.dto.user.UserDto;
-import com.fintech.dto.user.UserRequestDto.UserJoinRequestDto;
+import com.fintech.domain.user.domain.authentication.AuthenticationObj;
+import com.fintech.domain.user.domain.authentication.AuthenticationRepository;
+import com.fintech.domain.user.domain.user.User;
+import com.fintech.domain.user.domain.user.UserRepository;
+import com.fintech.domain.user.service.authentication.AuthenticationMethod;
+import com.fintech.domain.user.dto.user.UserDto;
+import com.fintech.domain.user.dto.user.UserRequestDto.UserJoinRequestDto;
+import com.fintech.domain.user.dto.user.UserRequestDto.UserLoginRequestDto;
 import com.fintech.exception.CustomUserApiException;
-import com.fintech.service.authentication.AuthenticationMethod;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
-import static com.fintech.domain.authentication.AuthenticationState.INPROGRESS;
+import static com.fintech.domain.user.domain.authentication.AuthenticationState.INPROGRESS;
 
 @Slf4j
 @Service
@@ -32,14 +33,10 @@ public class UserService {
         boolean authenticationComplete = authenticationRepository
                 .isAuthenticationComplete(joinDto.getEmail());
 
-        if(!authenticationComplete) {
+        checkEmailExist(joinDto.getEmail());
+
+        if (!authenticationComplete) {
             throw new CustomUserApiException("인증된 사용자가 아닙니다.");
-        }
-
-        User findUser = findByEmail(joinDto.getEmail());
-
-        if (findUser != null) {
-            throw new CustomUserApiException("중복된 사용자가 있습니다.");
         }
 
         User joinUser = userRepository.join(joinDto.toEntity(passwordEncoder));
@@ -48,6 +45,8 @@ public class UserService {
     }
 
     public void saveAuthenticationRequestObj(String email) {
+        checkEmailExist(email);
+
         String authCode = authenticationMethod.createNumberStringKey();
         AuthenticationObj authObj = AuthenticationObj.builder()
                 .email(email)
@@ -59,18 +58,41 @@ public class UserService {
         authenticationMethod.sendMessage(email, authCode);
     }
 
+    private void checkEmailExist(String email) {
+        UserDto findUser = findByEmail(email);
+
+        if (findUser != null) {
+            throw new CustomUserApiException("중복된 사용자가 있습니다.");
+        }
+    }
+
     public boolean checkAuthenticationCode(String email, String authCode) {
         boolean result = authenticationRepository.checkAuthenticationCode(email, authCode);
 
-        if(result) {
+        if (result) {
             authenticationRepository.setAuthenticationToComplete(email);
         }
 
         return result;
     }
 
-    public User findByEmail(String email) {
+    public UserDto findByEmail(String email) {
+        return userRepository
+                .findByEmail(email)
+                .map(UserDto::fromEntity)
+                .orElse(null);
+    }
 
-        return userRepository.findByEmail(email);
+
+    public UserDto login(UserLoginRequestDto dto) {
+        return userRepository
+                .findByEmail(dto.getEmail())
+                .filter(user ->
+                        passwordEncoder.matches(
+                                dto.getPassword(),
+                                user.getPassword())
+                )
+                .map(UserDto::fromEntity)
+                .orElse(null);
     }
 }
