@@ -4,6 +4,9 @@ server:
     encoding:
       charset: UTF-8
       force: true
+  error:
+    whitelabel:
+      enabled: false
 
 spring:
   datasource:
@@ -23,6 +26,11 @@ spring:
         format_sql: true
   config:
     import: smtp.properties
+  web:
+    resources:
+      add-mappings: false
+  mvc:
+    throw-exception-if-no-handler-found: true
 
 logging:
   level:
